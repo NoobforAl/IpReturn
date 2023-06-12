@@ -20,11 +20,12 @@ int main(void)
         return 1;
     }
 
-    ulfius_add_endpoint_by_val(&instance, "GET", "/", NULL, 0, &callback_ip, NULL);
+    ulfius_add_endpoint_by_val(&instance, "*", "*", NULL, 0, &callback_ip, NULL);
     if (ulfius_start_framework(&instance) == U_OK)
     {
         printf("Start framework on port %d\n", instance.port);
-        getchar();
+        while (getchar() != 'e')
+            NULL;
     }
     else
         fprintf(stderr, "Error starting framework\n");
