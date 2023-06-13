@@ -6,7 +6,7 @@ For writ API i use this pkg : [ulfius](https://github.com/babelouest/ulfius)
 
 ## How Run ?
 
-Tow way for run this program:
+Two way for run this program:
 
 1 - Run docker
 
