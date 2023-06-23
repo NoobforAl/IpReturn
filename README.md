@@ -20,19 +20,13 @@ And Run container:
 
 You need linux machine (i use arch linux for this program).
 
-Install gcc:
-> sudo pacman install gcc
-
-Install make:
-> sudo pacman install make
-
-Install ulfius:
->sudo pacman isntall ulfius
+Install dependency:
+> sudo pacman -Sy gcc make ulfius
 
 And run code:
 > make run
 
-And you can test Program:
+You can test Program:
 > curl 127.0.0.1:8080
 
 OutPut:
