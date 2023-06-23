@@ -9,7 +9,7 @@
 int callback_ip(
     const struct _u_request *request,
     struct _u_response *response,
-    void *user_data);
+    void *_);
 
 int main(void)
 {
@@ -39,8 +39,9 @@ int main(void)
 int callback_ip(
     const struct _u_request *request,
     struct _u_response *response,
-    void *user_data)
+    void *_)
 {
+    (void)_;
     char log[33];
     char ip[INET_ADDRSTRLEN];
 
