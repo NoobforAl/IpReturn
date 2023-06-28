@@ -1,60 +1,72 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 #include <string.h>
 #include <ulfius.h>
 #include <arpa/inet.h>
 
-#define PORT 8080
+#include "env/env.h"
+#include "router/router.h"
+#include "logger/logger.h"
 
-int callback_ip(
-    const struct _u_request *request,
-    struct _u_response *response,
-    void *_);
+// ulfius app
+struct _u_instance ins;
+
+// handle signal error
+void sigtermHandler(int signum);
+
+// start frame work
+int startFrameWork(void);
+
+// clean app frame work
+void cleanProgram(void);
 
 int main(void)
 {
-    struct _u_instance instance;
-    if (ulfius_init_instance(&instance, PORT, NULL, NULL) != U_OK)
+    // handle exit from program
+    signal(SIGTERM, sigtermHandler);
+    signal(SIGINT, sigtermHandler);
+
+    // init logger
+    initLogger(getDebug());
+
+    int exit = startFrameWork();
+    cleanProgram();
+    return exit;
+}
+
+void sigtermHandler(int signum)
+{
+    warn("Received SIGTERM signal. Performing cleanup...\n");
+    warn("End framework\n");
+    cleanProgram();
+    exit(signum);
+}
+
+int startFrameWork(void)
+{
+    // setUp Port 8080
+    if (ulfius_init_instance(&ins, 8080, NULL, NULL) != U_OK)
     {
-        fprintf(stderr, "Error ulfius_init_instance, abort\n");
+        error("Error ulfius_init_instance, abort\n");
         return 1;
     }
 
-    ulfius_add_endpoint_by_val(&instance, "*", "*", NULL, 0, &callback_ip, NULL);
-    if (ulfius_start_framework(&instance) == U_OK)
+    setRouter(&ins);
+    if (ulfius_start_framework(&ins) == U_OK)
     {
-        printf("Start framework on port %d\n", instance.port);
+        info("Start framework on port 8080\n");
         while (getchar() != 'e')
             NULL;
     }
     else
-        fprintf(stderr, "Error starting framework\n");
+        error("Error starting framework\n");
 
-    printf("End framework\n");
-    ulfius_stop_framework(&instance);
-    ulfius_clean_instance(&instance);
     return 0;
 }
 
-int callback_ip(
-    const struct _u_request *request,
-    struct _u_response *response,
-    void *_)
+void cleanProgram(void)
 {
-    (void)_;
-    char log[33];
-    char ip[INET_ADDRSTRLEN];
-
-    if (request->client_address->sa_family == AF_INET)
-        inet_ntop(AF_INET, &(((struct sockaddr_in *)request->client_address)->sin_addr), ip, INET_ADDRSTRLEN);
-    else if (request->client_address->sa_family == AF_INET6)
-        inet_ntop(AF_INET6, &(((struct sockaddr_in6 *)request->client_address)->sin6_addr), ip, INET6_ADDRSTRLEN);
-    else
-        strcpy(ip, "Unknown");
-
-    sprintf(log, "ip: %s request!\n", ip);
-    fprintf(stderr, log);
-
-    ulfius_set_string_body_response(response, 200, ip);
-    return U_CALLBACK_COMPLETE;
+    ulfius_stop_framework(&ins);
+    ulfius_clean_instance(&ins);
 }
