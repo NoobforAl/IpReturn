@@ -31,7 +31,7 @@ void initLogger(const bool de)
         return;
 
     DEBUG = de;
-    debug("app run debug mode");
+    debug("app run debug mode\n");
 }
 
 void info(const char *msg)
