@@ -2,7 +2,17 @@ CC := gcc
 CFLAGS := -Wall -Wextra -pedantic -O2 -lulfius
 
 EXE := ipReturn
-SRCS := $(wildcard *.c)
+
+ENV_DIR := env
+LOGGER_DIR := logger
+ROUTER_DIR := router
+CONTROLLER_DIR := controller
+
+SRCS := $(wildcard *.c) \
+        $(LOGGER_DIR)/logger.c \
+        $(ENV_DIR)/env.c \
+        $(ROUTER_DIR)/router.c \
+        $(CONTROLLER_DIR)/controller.c
 
 define rmExistFile
 	@rm -f $1
