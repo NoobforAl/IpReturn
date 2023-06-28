@@ -1,5 +1,5 @@
-#ifndef LOGGER
-#define LOGGER
+#ifndef ENV
+#define ENV
 
 #include <stdlib.h>
 #include <string.h>
