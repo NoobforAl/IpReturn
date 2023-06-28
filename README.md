@@ -34,3 +34,5 @@ OutPut:
 ```txt
 127.0.0.1
 ```
+
+Note: for run debug mode need add environment `export DEBUG_IP_RETURN=true`.
