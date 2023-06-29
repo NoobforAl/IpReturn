@@ -14,7 +14,6 @@ static char *getNowTime(void)
     // Format the time as "YYYY/MM/DD HH:MM:SS"
     strftime(formattedTime, 20, "%Y/%m/%d %H:%M:%S", timeInfo);
 
-    // free(timeInfo);
     return formattedTime;
 }
 
